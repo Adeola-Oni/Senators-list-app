@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Senators List</title>
+  </head>
+  <body style="overflow: hidden;">
+      <header >
+            <nav class="navbar navbar-light bg-light">
+                <a class="navbar-brand" href="#"><b>SENATORS APP</b></a>
+                
+            </nav>
+            
+            <br/>
+            <section>
+                <div class='row'>
+                    <div class='col-lg-3' style="padding-left: 2%;">
+                        <br/><br/>
+                        <div class="card" >
+                            <div class="card-body">
+                                <form id='form' >
+                                    <h5 style='text-align: center;'>ADD A SENATOR'S DETAILS</h5>
+                                    <hr/>
+                                    <div class="form-group">
+                                        <label for="inputState">State <a style="color: red;"> *</a></label>
+                                        <input type="text" style="width: 100%;" class="form-control" id="inputState" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="inputNumber">PhoneNumber <a style="color: red;"> *</a></label>
+                                        <input type="number" style="width: 100%;" class="form-control" id="inputNumber" required>
+                                    </div>
+                                    
+                                    
+                                    <div class="form-group">
+                                        <label for="inputName" style="margin-right: 5%;">Name <a style="color: red;"> *</a></label>
+                                        <input type="text" style="width: 100%;" class="form-control" id="inputName" placeholder="Sen. E. Abaribe" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="inputEmail" style="margin-right: 5%;">Email <a style="color: red;"> *</a></label>
+                                        <input type="email"  style="width: 100%;" class="form-control" id="inputEmail" placeholder="nyiabaribe@yahoo.com " required>
+                                    </div>
+                                    <br/>
+                                    <button type='submit' class="btn btn-primary">Submit</button>
+                                    <input type="reset" class="btn btn-dark " value="Reset">
+                                </form>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class='col-lg-9' style="text-align: center; padding-right: 2%;">
+                        <table class="table" >
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">STATE</th>
+                                    <th scope="col">NAME</th>
+                                    <th scope="col">PHONE NUMBER</th>
+                                    <th scope="col">EMAIL</th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id='display'>
+
+                                
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </section>
+      </header>
+    
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(()=>{
+            const display = $("#display");
+            const form = $("#form");
+            const inputState = $("#inputState");
+            const inputNumber = $("#inputNumber");
+            const inputName = $("#inputName");
+            const inputEmail = $("#inputEmail"); 
+
+            const getItems =()=>{
+                fetch('/list', {method: "get"}).then((response)=>{
+                    return response.json();
+                }).then((data)=>{
+                    console.log(data);
+                    displayItems(data)
+                })
+            }
+
+
+            const deleteItem =(item, listItemID, deleteID)=>{
+                let deleteBtn = $(`#${deleteID}`)
+                deleteBtn.click(()=>{
+                    fetch(`/${item._id}`, {
+                        method: "delete"
+                    }).then((response)=>{
+                        return response.json()
+                    }).then((data)=>{
+                        if(data.ok==1){
+                            $(`#${listItemID}`).remove();
+                        }
+                    })
+                })
+
+            }
+
+            const editItem = (item, itemID, editID)=>{
+                let editBtn = $(`${editID}`);
+                editBtn.click(()=>{
+                    alert('lollies')
+                    fetch(`/${item._id}`, {
+                        method: "put",
+                        headers:{
+                            "Content-Type" : "application/json; charset=utf8"
+                        },
+                        body : JSON.stringify({
+                            name: inputName.val(),
+                            state: inputState.val(),
+                            phonenum: inputNumber.val(),
+                            email: inputEmail.val()
+                        }),
+                    }).then((response)=>{
+                        return response.json()
+                    }).then((data)=>
+                    {
+                        if(data.ok == 1){
+                            let todoIndex = $(`#${itemID}`);
+                            itemIndex.html(data.value.item);
+                        }
+                    })
+                })
+            }
+
+
+            const buildIDs = (item)=>{
+                return{
+                    editID: "edit_" + item._id,
+                    deleteID: "delete_"+item._id,
+                    listItemID:'listItem_'+item._id, 
+                    stateID: 'stateID_'+item._id,
+                    nameID: 'nameID_'+item._id,
+                    emailID: 'emailID_'+item._id,
+                    numID: 'numID_'+item._id,
+
+                }
+            }
+
+            const buildTemplate=(item, ids)=>{
+                return `<tr id=${ids.listItemID}>
+                            <td id="${ids.stateID}">${item.state}</td>
+                            <td id="${ids.nameID}">${item.name}</td>
+                            <td id="${ids.emailID}">${item.phonenum}</td>
+                            <td id="${ids.numID}">${item.email}</td>
+                            <td ><button type="button" class="btn btn-warning" id="${ids.editID}">Edit</button></td>
+                            <td ><button type="button" class="btn btn-danger" id="${ids.deleteID}">Delete</button></td>
+                        </tr>`
+            }
+
+            const displayItems =(data)=>{
+                data.forEach((item) => {
+                    let ids = buildIDs(item);
+                    display.append(buildTemplate(item, ids));
+                    editItem(item, ids.itemID, ids.editID);
+                    deleteItem(item, ids.listItemID, ids.deleteID);
+                });
+            }
+            
+            form.submit((e)=>{
+                e.preventDefault;
+                fetch('/', {
+                    method: 'post',
+                    body : JSON.stringify({
+                        name: inputName.val(),
+                        state: inputState.val(),
+                        phonenum: inputNumber.val(),
+                        email: inputEmail.val()
+                    }),
+
+                    headers: {
+                        "Content-Type" : "application/json; charset=utf-8"
+                    }
+                }).then((response)=>{
+                    return response.json();
+                }).then((data)=>{
+                    if(data.result.ok ==1 && data.result.n ==1){
+                        let ids = buildIDs(data.document, ids);
+                        editItem(data.document,ids.item, ids.editID);
+                        deleteItem(data.document, ids.listItemID, ids.deleteID)
+                    }
+                })
+            })
+        })
+    </script>
+  </body>
+</html>

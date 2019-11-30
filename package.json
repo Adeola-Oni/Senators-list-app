@@ -1,0 +1,19 @@
+{
+  "name": "senatorslist",
+  "version": "1.0.0",
+  "description": "This is an application that shows the details of Nigerian senators",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adeola Oni",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "bootstrap": "^4.4.1",
+    "express": "^4.17.1",
+    "mongodb": "^3.3.5",
+    "mysql": "^2.17.1",
+    "path": "^0.12.7"
+  }
+}
