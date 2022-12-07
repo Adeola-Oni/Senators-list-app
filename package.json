@@ -9,9 +9,9 @@
   "author": "Adeola Oni",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.1",
     "bootstrap": "^4.4.1",
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "mongodb": "^3.3.5",
     "mysql": "^2.17.1",
     "path": "^0.12.7"
